@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"time"
 
 	"github.com/heppu/jun/client"
 	"github.com/heppu/pwp-bot/api"
@@ -11,12 +12,13 @@ import (
 )
 
 func main() {
+	delay := 500 * time.Microsecond
 	c := client.New(
 		"irc.nlnog.net:6667",
 		"pwp-bot",
 		[]string{"#otit.code.pwp"},
 		nil,
-		nil,
+		&delay,
 	)
 
 	api := api.NewApiClient("http://127.0.0.1:8000")
@@ -26,7 +28,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Graceful shutdown for Ctrl+C
 	go func(c *client.Client) {
 		err := <-c.Error
 		log.Println(err)
